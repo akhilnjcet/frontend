@@ -5,6 +5,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 // Pages
 import LoginPage from '../pages/LoginPage.jsx';
+import SignupPage from '../pages/SignupPage.jsx';
 import DashboardLayout from '../layouts/DashboardLayout.jsx';
 
 // Admin pages
@@ -22,7 +23,8 @@ import DoctorAppointments from '../pages/doctor/DoctorAppointments.jsx';
 import DoctorPatients from '../pages/doctor/DoctorPatients.jsx';
 import DoctorPrescriptions from '../pages/doctor/DoctorPrescriptions.jsx';
 import PrescriptionWriter from '../pages/doctor/PrescriptionWriter.jsx';
-import DoctorEarnings from '../pages/doctor/DoctorEarnings.jsx';
+import PatientDetails from '../pages/doctor/PatientDetails.jsx';
+import DoctorPharmacy from '../pages/doctor/DoctorPharmacy.jsx';
 
 // Patient pages
 import PatientDashboard from '../pages/patient/PatientDashboard.jsx';
@@ -30,6 +32,9 @@ import BookAppointment from '../pages/patient/BookAppointment.jsx';
 import PatientAppointments from '../pages/patient/PatientAppointments.jsx';
 import PatientPrescriptions from '../pages/patient/PatientPrescriptions.jsx';
 import PatientBills from '../pages/patient/PatientBills.jsx';
+
+// Pharmacy pages
+import PharmacyDashboard from '../pages/pharmacy/PharmacyDashboard.jsx';
 
 export const router = createBrowserRouter([
     {
@@ -39,6 +44,10 @@ export const router = createBrowserRouter([
     {
         path: '/login',
         element: <LoginPage />,
+    },
+    {
+        path: '/signup',
+        element: <SignupPage />,
     },
 
     // ── Admin Routes ────────────────────────────────────
@@ -66,7 +75,8 @@ export const router = createBrowserRouter([
             { path: 'patients', element: <DoctorPatients /> },
             { path: 'prescriptions', element: <DoctorPrescriptions /> },
             { path: 'prescriptions/write', element: <PrescriptionWriter /> },
-            { path: 'earnings', element: <DoctorEarnings /> },
+            { path: 'patients/:id', element: <PatientDetails /> },
+            { path: 'pharmacy', element: <DoctorPharmacy /> },
         ],
     },
 
@@ -80,6 +90,15 @@ export const router = createBrowserRouter([
             { path: 'appointments', element: <PatientAppointments /> },
             { path: 'prescriptions', element: <PatientPrescriptions /> },
             { path: 'bills', element: <PatientBills /> },
+        ],
+    },
+
+    // ── Pharmacy Routes ─────────────────────────────────
+    {
+        path: '/pharmacy',
+        element: <DashboardLayout role="pharmacy" />,
+        children: [
+            { index: true, element: <PharmacyDashboard /> },
         ],
     },
 

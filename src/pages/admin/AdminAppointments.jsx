@@ -12,6 +12,8 @@ import Modal from '../../components/Modal.jsx';
 import AnimatedButton from '../../components/AnimatedButton.jsx';
 import { getAllAppointments, updateAppointmentStatus } from '../../services/appointmentService.js';
 import { formatDate, formatTime, formatCurrency } from '../../utils/index.js';
+import { exportTableToPDF } from '../../utils/pdfExport.js';
+import { Download } from 'lucide-react';
 
 export default function AdminAppointments() {
     const [appointments, setAppointments] = useState([]);
@@ -30,6 +32,20 @@ export default function AdminAppointments() {
         await updateAppointmentStatus(id, status);
         toast.success(`Appointment ${status.toLowerCase()}`);
         load();
+    };
+
+    const handleExport = () => {
+        const columns = ['ID', 'Patient', 'Doctor', 'Date', 'Time', 'Status', 'Bill Amount'];
+        const data = appointments.map(row => [
+            row.id,
+            row.patient?.user?.name || 'N/A',
+            row.doctor?.user?.name || 'N/A',
+            formatDate(row.appointment_date),
+            formatTime(row.appointment_time),
+            row.status,
+            row.bill ? formatCurrency(row.bill.amount) : 'N/A'
+        ]);
+        exportTableToPDF('Admin Appointments Report', columns, data, 'Admin_Appointments_Report');
     };
 
     const columns = [
@@ -103,6 +119,15 @@ export default function AdminAppointments() {
             </div>
 
             <AnimatedCard hover={false}>
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-bold text-white">All Appointments</h2>
+                    <button
+                        onClick={handleExport}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-sm font-medium text-gray-300 hover:bg-slate-700 hover:text-white transition-colors"
+                    >
+                        <Download size={14} /> Export PDF
+                    </button>
+                </div>
                 <DataTable
                     columns={columns}
                     data={appointments}

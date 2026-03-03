@@ -25,10 +25,10 @@ const NAV = {
     ],
     doctor: [
         { label: 'Dashboard', icon: LayoutDashboard, path: '/doctor' },
+        { label: 'Patients', icon: UserRound, path: '/doctor/patients' },
         { label: 'Appointments', icon: Calendar, path: '/doctor/appointments' },
-        { label: 'My Patients', icon: UserRound, path: '/doctor/patients' },
         { label: 'Prescriptions', icon: FileText, path: '/doctor/prescriptions' },
-        { label: 'Earnings', icon: CreditCard, path: '/doctor/earnings' },
+        { label: 'Pharmacy', icon: HeartPulse, path: '/doctor/pharmacy' },
     ],
     patient: [
         { label: 'Dashboard', icon: LayoutDashboard, path: '/patient' },
@@ -37,12 +37,16 @@ const NAV = {
         { label: 'Prescriptions', icon: FileText, path: '/patient/prescriptions' },
         { label: 'Bills', icon: CreditCard, path: '/patient/bills' },
     ],
+    pharmacy: [
+        { label: 'Dashboard', icon: LayoutDashboard, path: '/pharmacy' },
+    ],
 };
 
 const ROLE_META = {
     admin: { label: 'Administrator', color: '#7C3AED', bg: 'rgba(124,58,237,.1)', border: 'rgba(124,58,237,.2)' },
     doctor: { label: 'Physician', color: '#1E5AA8', bg: 'rgba(30,90,168,.1)', border: 'rgba(30,90,168,.2)' },
     patient: { label: 'Patient', color: '#1FA79A', bg: 'rgba(31,167,154,.1)', border: 'rgba(31,167,154,.2)' },
+    pharmacy: { label: 'Pharmacist', color: '#F4A300', bg: 'rgba(244,163,0,.1)', border: 'rgba(244,163,0,.2)' },
 };
 
 const EXPANDED_W = 248;
@@ -59,7 +63,7 @@ export default function Sidebar({ mobile = false, onCloseMobile }) {
     const w = collapsed ? COLLAPSED_W : EXPANDED_W;
 
     const isActive = (path) =>
-        path.endsWith('/admin') || path.endsWith('/doctor') || path.endsWith('/patient')
+        path.endsWith('/admin') || path.endsWith('/doctor') || path.endsWith('/patient') || path.endsWith('/pharmacy')
             ? location.pathname === path
             : location.pathname.startsWith(path);
 

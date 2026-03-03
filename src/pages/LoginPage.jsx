@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Mail, Lock, HeartPulse, ArrowRight, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -14,6 +14,7 @@ import FormInput from '../components/FormInput.jsx';
 const QUICK_LOGINS = [
     { role: 'Admin', color: '#7C3AED', bg: 'rgba(124,58,237,.08)', border: 'rgba(124,58,237,.2)', email: 'admin@medicare.pro', password: 'admin123', badge: '👑' },
     { role: 'Doctor', color: '#1E5AA8', bg: 'rgba(30,90,168,.08)', border: 'rgba(30,90,168,.2)', email: 'james.wilson@medicare.pro', password: 'doctor123', badge: '🩺' },
+    { role: 'Pharmacy', color: '#F4A300', bg: 'rgba(244,163,0,.08)', border: 'rgba(244,163,0,.2)', email: 'pharmacy@medicare.pro', password: 'pharmacy123', badge: '💊' },
     { role: 'Patient', color: '#1FA79A', bg: 'rgba(31,167,154,.08)', border: 'rgba(31,167,154,.2)', email: 'alice@example.com', password: 'patient123', badge: '👤' },
 ];
 
@@ -198,6 +199,15 @@ export default function LoginPage() {
                         </div>
                         <p style={{ margin: '10px 0 0', fontSize: 10.5, color: 'var(--text-3)', textAlign: 'center', lineHeight: 1.4 }}>
                             Click a role to fill credentials → then Sign In
+                        </p>
+                    </div>
+                    {/* Sign Up Link */}
+                    <div style={{ marginTop: 24, textAlign: 'center' }}>
+                        <p style={{ margin: 0, fontSize: 13, color: 'var(--text-2)' }}>
+                            New here?{' '}
+                            <Link to="/signup" style={{ color: 'var(--color-primary)', fontWeight: 700, textDecoration: 'none' }}>
+                                Create an Account
+                            </Link>
                         </p>
                     </div>
                 </div>

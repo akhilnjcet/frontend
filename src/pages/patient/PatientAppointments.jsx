@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, User, FileText, ChevronDown } from 'lucide-react';
+import { Calendar, Clock, User, FileText, ChevronDown, Download } from 'lucide-react';
 import PageWrapper from '../../components/PageWrapper.jsx';
 import AnimatedCard from '../../components/AnimatedCard.jsx';
 import StatusBadge from '../../components/StatusBadge.jsx';
@@ -12,6 +12,7 @@ import { getPatientByUserId } from '../../services/patientService.js';
 import { getAppointmentsByPatient } from '../../services/appointmentService.js';
 import { useAuthStore } from '../../store/index.js';
 import { formatDate, formatTime, formatCurrency, getInitials, getAvatarGradient } from '../../utils/index.js';
+import { exportTableToPDF } from '../../utils/pdfExport.js';
 
 const FILTERS = ['All', 'Scheduled', 'Completed', 'Cancelled'];
 
@@ -42,8 +43,29 @@ export default function PatientAppointments() {
         );
     }
 
+    const handleExport = () => {
+        const columns = ['Doctor', 'Specialization', 'Date', 'Time', 'Status', 'Bill'];
+        const data = filtered.map(appt => [
+            appt.doctor?.user?.name || 'N/A',
+            appt.doctor?.specialization || 'N/A',
+            formatDate(appt.appointment_date),
+            formatTime(appt.appointment_time),
+            appt.status,
+            appt.bill ? formatCurrency(appt.bill.amount) : 'Free'
+        ]);
+        exportTableToPDF('My Appointments History', columns, data, 'Patient_Appointments');
+    };
+
     return (
-        <PageWrapper title="My Appointments" subtitle={`${appointments.length} total appointments`}>
+        <PageWrapper
+            title="My Appointments"
+            subtitle={`${appointments.length} total appointments`}
+            actions={
+                <AnimatedButton icon={Download} size="sm" onClick={handleExport}>
+                    Export History
+                </AnimatedButton>
+            }
+        >
             {/* Filter tabs */}
             <div className="flex flex-wrap gap-2">
                 {FILTERS.map(f => (
@@ -51,8 +73,8 @@ export default function PatientAppointments() {
                         key={f}
                         onClick={() => setFilter(f)}
                         className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${filter === f
-                                ? 'bg-blue-600 text-white border-blue-500'
-                                : 'bg-slate-800/60 text-gray-400 border-white/10 hover:border-blue-500/30 hover:text-white'
+                            ? 'bg-blue-600 text-white border-blue-500'
+                            : 'bg-slate-800/60 text-gray-400 border-white/10 hover:border-blue-500/30 hover:text-white'
                             }`}
                     >
                         {f}

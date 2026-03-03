@@ -11,6 +11,7 @@ import { getPatientByUserId } from '../../services/patientService.js';
 import { getAppointmentsByPatient } from '../../services/appointmentService.js';
 import { useAuthStore } from '../../store/index.js';
 import { formatDate, getInitials, getAvatarGradient } from '../../utils/index.js';
+import { exportTableToPDF } from '../../utils/pdfExport.js';
 
 export default function PatientPrescriptions() {
     const { user } = useAuthStore();
@@ -36,7 +37,16 @@ export default function PatientPrescriptions() {
     }, []);
 
     const handleDownload = (rx) => {
-        toast.success(`Prescription #${rx.id} download started (UI demo)`);
+        const columns = ['Record ID', 'Patient', 'Doctor', 'Date', 'Diagnosis', 'Notes'];
+        const data = [[
+            `RX-${rx.id}`,
+            user.name || 'N/A', // user contains patient name
+            rx.doctor?.user?.name || 'N/A',
+            formatDate(rx.date),
+            rx.diagnosis,
+            rx.note
+        ]];
+        exportTableToPDF(`Prescription: #RX-${rx.id}`, columns, data, `Prescription_RX${rx.id}`);
     };
 
     if (loading) {

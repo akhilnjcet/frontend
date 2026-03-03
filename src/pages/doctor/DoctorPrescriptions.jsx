@@ -3,13 +3,15 @@
 // ═══════════════════════════════════════════════════════
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FileText } from 'lucide-react';
+import { FileText, Download } from 'lucide-react';
 import PageWrapper from '../../components/PageWrapper.jsx';
 import AnimatedCard from '../../components/AnimatedCard.jsx';
 import { getDoctorByUserId } from '../../services/doctorService.js';
 import { getAppointmentsByDoctor } from '../../services/appointmentService.js';
 import { useAuthStore } from '../../store/index.js';
 import { formatDate, getInitials, getAvatarGradient } from '../../utils/index.js';
+import { exportTableToPDF } from '../../utils/pdfExport.js';
+import AnimatedButton from '../../components/AnimatedButton.jsx';
 
 export default function DoctorPrescriptions() {
     const { user } = useAuthStore();
@@ -33,8 +35,28 @@ export default function DoctorPrescriptions() {
 
     if (loading) return <PageWrapper title="Prescriptions"><div className="skeleton h-48 rounded-2xl" /></PageWrapper>;
 
+    const handleExport = () => {
+        const columns = ['Rx ID', 'Patient', 'Date', 'Diagnosis', 'Notes'];
+        const data = prescriptions.map(rx => [
+            rx.id,
+            rx.patient?.user?.name || 'N/A',
+            formatDate(rx.date),
+            rx.diagnosis,
+            rx.note
+        ]);
+        exportTableToPDF('Recent Prescriptions History', columns, data, 'Doctor_Prescriptions');
+    };
+
     return (
-        <PageWrapper title="Prescriptions" subtitle={`${prescriptions.length} prescriptions written`}>
+        <PageWrapper
+            title="Prescriptions"
+            subtitle={`${prescriptions.length} prescriptions written`}
+            actions={
+                <AnimatedButton icon={Download} size="sm" onClick={handleExport}>
+                    Export History
+                </AnimatedButton>
+            }
+        >
             {prescriptions.length === 0 ? (
                 <div className="flex flex-col items-center py-20 text-gray-500">
                     <FileText size={48} className="mb-4 opacity-30" />

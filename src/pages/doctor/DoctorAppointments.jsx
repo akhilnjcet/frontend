@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, XCircle, FileText, Calendar, Clock } from 'lucide-react';
+import { CheckCircle, XCircle, FileText, Calendar, Clock, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 import PageWrapper from '../../components/PageWrapper.jsx';
 import AnimatedCard from '../../components/AnimatedCard.jsx';
@@ -13,6 +13,7 @@ import { getDoctorByUserId } from '../../services/doctorService.js';
 import { getAppointmentsByDoctor, updateAppointmentStatus } from '../../services/appointmentService.js';
 import { useAuthStore } from '../../store/index.js';
 import { formatDate, formatTime, getInitials, getAvatarGradient } from '../../utils/index.js';
+import { exportTableToPDF } from '../../utils/pdfExport.js';
 
 const actionBtn = (color, hoverBg) => ({
     padding: '6px', borderRadius: 7, border: '1px solid transparent',
@@ -64,6 +65,18 @@ export default function DoctorAppointments() {
         background: 'transparent', cursor: 'pointer', display: 'flex',
         transition: 'all .15s', color,
     });
+
+    const handleExport = () => {
+        const columns = ['ID', 'Patient', 'Date', 'Time', 'Status'];
+        const data = filtered.map(row => [
+            row.id,
+            row.patient?.user?.name || 'N/A',
+            formatDate(row.appointment_date),
+            formatTime(row.appointment_time),
+            row.status
+        ]);
+        exportTableToPDF('My Appointments Schedule', columns, data, 'Doctor_Appointments');
+    };
 
     return (
         <PageWrapper
@@ -124,6 +137,18 @@ export default function DoctorAppointments() {
                             onBlur={e => { e.target.style.borderColor = 'var(--border-strong)'; e.target.style.boxShadow = 'none'; }}
                         />
                     </div>
+
+                    {/* Export Button */}
+                    <button
+                        onClick={handleExport}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px',
+                            background: 'var(--color-primary)', color: '#fff', border: 'none',
+                            borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                        }}
+                    >
+                        <Download size={14} /> Export PDF
+                    </button>
                 </div>
 
                 {/* Table */}

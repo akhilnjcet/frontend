@@ -15,7 +15,9 @@ import { getAllDoctors, createDoctor, deleteDoctor } from '../../services/doctor
 import { getAllDepartments } from '../../services/departmentService.js';
 import { createUser } from '../../services/userService.js';
 import { getInitials, getAvatarGradient, formatCurrency } from '../../utils/index.js';
+import { exportTableToPDF } from '../../utils/pdfExport.js';
 import { useForm } from 'react-hook-form';
+import { Download } from 'lucide-react';
 
 export default function AdminDoctors() {
     const [doctors, setDoctors] = useState([]);
@@ -53,6 +55,19 @@ export default function AdminDoctors() {
         await deleteDoctor(id);
         toast.success('Doctor removed');
         load();
+    };
+
+    const handleExport = () => {
+        const columns = ['ID', 'Name', 'Email', 'Department', 'Specialization', 'Fee'];
+        const data = doctors.map(row => [
+            row.id,
+            row.user?.name || 'N/A',
+            row.user?.email || 'N/A',
+            row.department?.name || 'N/A',
+            row.specialization,
+            formatCurrency(row.fee)
+        ]);
+        exportTableToPDF('Active Doctors Registry', columns, data, 'Doctors_Registry');
     };
 
     const columns = [
@@ -168,6 +183,22 @@ export default function AdminDoctors() {
             </div>
 
             <AnimatedCard hover={false} padding="p-0">
+                <div style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)' }}>
+                    <h2 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--text-1)' }}>Doctor Registry</h2>
+                    <button
+                        onClick={handleExport}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px',
+                            background: 'var(--bg-panel)', border: '1px solid var(--border-strong)',
+                            borderRadius: 8, fontSize: 12.5, fontWeight: 600, color: 'var(--text-2)',
+                            cursor: 'pointer', transition: 'all .15s'
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-1)'; e.currentTarget.style.background = 'var(--bg-hover)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-2)'; e.currentTarget.style.background = 'var(--bg-panel)'; }}
+                    >
+                        <Download size={14} /> Export PDF
+                    </button>
+                </div>
                 <DataTable
                     columns={columns}
                     data={doctors}

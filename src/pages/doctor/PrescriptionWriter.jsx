@@ -14,7 +14,7 @@ import {
 import toast from 'react-hot-toast';
 import { getDoctorByUserId } from '../../services/doctorService.js';
 import { getAppointmentsByDoctor } from '../../services/appointmentService.js';
-import { prescriptions } from '../../mock/database.js';
+import { prescriptions, inventory } from '../../mock/database.js';
 import { useAuthStore } from '../../store/index.js';
 import { formatDate, formatTime } from '../../utils/index.js';
 
@@ -54,7 +54,7 @@ export default function PrescriptionWriter() {
     const [saved, setSaved] = useState(false);
 
 
-    const { register, control, handleSubmit, watch, formState: { errors } } = useForm({
+    const { register, control, handleSubmit, watch, setValue, formState: { errors } } = useForm({
         defaultValues: {
             diagnosis: '',
             chiefComplaint: '',
@@ -66,6 +66,8 @@ export default function PrescriptionWriter() {
             notes: '',
         },
     });
+
+    const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
 
     const { fields, append, remove } = useFieldArray({ control, name: 'medicines' });
 
@@ -322,12 +324,75 @@ export default function PrescriptionWriter() {
 
                                     <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 10 }}>
                                         <FormGroup label="Medicine Name *">
-                                            <input
-                                                {...register(`medicines.${idx}.name`, { required: true })}
-                                                placeholder="e.g. Amoxicillin 500mg"
-                                                style={inputStyle}
-                                                onFocus={focusStyle} onBlur={blurStyle}
-                                            />
+                                            <div style={{ position: 'relative' }}>
+                                                <input
+                                                    {...register(`medicines.${idx}.name`, { required: true })}
+                                                    placeholder="Select a medicine..."
+                                                    readOnly
+                                                    style={{ ...inputStyle, cursor: 'pointer' }}
+                                                    onClick={() => setActiveDropdownIndex(idx)}
+                                                    onFocus={(e) => {
+                                                        focusStyle(e);
+                                                        setActiveDropdownIndex(idx);
+                                                    }}
+                                                    onBlur={(e) => {
+                                                        blurStyle(e);
+                                                        // Delay hiding to allow click events on dropdown items
+                                                        setTimeout(() => {
+                                                            if (activeDropdownIndex === idx) setActiveDropdownIndex(null);
+                                                        }, 200);
+                                                    }}
+                                                />
+
+                                                {/* ─── Search Dropdown ─── */}
+                                                {activeDropdownIndex === idx && (
+                                                    <div style={{
+                                                        position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0,
+                                                        background: '#fff', border: '1px solid var(--border)', borderRadius: 8,
+                                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 50, maxHeight: 180, overflowY: 'auto'
+                                                    }}>
+                                                        {inventory.length === 0 ? (
+                                                            <div style={{ padding: '10px 12px', fontSize: 12, color: 'var(--text-3)', textAlign: 'center' }}>
+                                                                No medicines available
+                                                            </div>
+                                                        ) : (
+                                                            inventory.map(med => (
+                                                                <div
+                                                                    key={med.id}
+                                                                    onClick={() => {
+                                                                        setValue(`medicines.${idx}.name`, med.name);
+                                                                        setActiveDropdownIndex(null);
+                                                                    }}
+                                                                    style={{
+                                                                        padding: '8px 12px', borderBottom: '1px solid var(--bg-app)',
+                                                                        cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                                                        transition: 'background 0.15s'
+                                                                    }}
+                                                                    onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-app)'}
+                                                                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                                                                >
+                                                                    <div>
+                                                                        <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: 'var(--text-1)' }}>{med.name}</p>
+                                                                        <p style={{ margin: 0, fontSize: 11, color: 'var(--text-3)' }}>{med.category}</p>
+                                                                    </div>
+                                                                    <div style={{ textAlign: 'right' }}>
+                                                                        <span style={{
+                                                                            fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 4, textTransform: 'uppercase',
+                                                                            background: med.status === 'In Stock' ? 'var(--color-success-light)' : (med.status === 'Out of Stock' ? 'var(--color-error-light)' : 'var(--color-warning-light)'),
+                                                                            color: med.status === 'In Stock' ? 'var(--color-success)' : (med.status === 'Out of Stock' ? 'var(--color-error)' : 'var(--color-warning)')
+                                                                        }}>
+                                                                            {med.status}
+                                                                        </span>
+                                                                        <p style={{ margin: '4px 0 0', fontSize: 10, color: 'var(--text-2)' }}>
+                                                                            Qty: {med.stock} {med.unit}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
                                         </FormGroup>
                                         <FormGroup label="Dosage">
                                             <input

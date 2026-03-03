@@ -12,6 +12,8 @@ import StatusBadge from '../../components/StatusBadge.jsx';
 import AnimatedButton from '../../components/AnimatedButton.jsx';
 import { getAllBills, updateBillStatus, getTotalRevenue } from '../../services/billService.js';
 import { formatCurrency, formatDate } from '../../utils/index.js';
+import { exportTableToPDF } from '../../utils/pdfExport.js';
+import { Download } from 'lucide-react';
 
 export default function AdminBills() {
     const [bills, setBills] = useState([]);
@@ -30,6 +32,19 @@ export default function AdminBills() {
         await updateBillStatus(id, 'Paid');
         toast.success('Bill marked as paid!');
         load();
+    };
+
+    const handleExport = () => {
+        const columns = ['ID', 'Patient', 'Doctor', 'Amount', 'Status', 'Date'];
+        const data = bills.map(row => [
+            row.id,
+            row.appointment?.patient?.user?.name || 'N/A',
+            row.appointment?.doctor?.user?.name || 'N/A',
+            formatCurrency(row.amount),
+            row.status,
+            formatDate(row.created_at)
+        ]);
+        exportTableToPDF('Admin Financial Report', columns, data, 'Admin_Financial_Report');
     };
 
     const columns = [
@@ -63,6 +78,15 @@ export default function AdminBills() {
                 <StatCard title="Total Bills" value={bills.length} icon={CheckCircle} color="purple" delay={2} />
             </div>
             <AnimatedCard hover={false}>
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-bold text-white">All Bills</h2>
+                    <button
+                        onClick={handleExport}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-sm font-medium text-gray-300 hover:bg-slate-700 hover:text-white transition-colors"
+                    >
+                        <Download size={14} /> Export PDF
+                    </button>
+                </div>
                 <DataTable
                     columns={columns}
                     data={bills}

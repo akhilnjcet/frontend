@@ -13,6 +13,7 @@ import { getPatientByUserId } from '../../services/patientService.js';
 import { getBillsByPatient } from '../../services/billService.js';
 import { useAuthStore } from '../../store/index.js';
 import { formatDate, formatCurrency } from '../../utils/index.js';
+import { exportTableToPDF } from '../../utils/pdfExport.js';
 
 export default function PatientBills() {
     const { user } = useAuthStore();
@@ -35,7 +36,16 @@ export default function PatientBills() {
     const totalPending = pending.reduce((sum, b) => sum + b.amount, 0);
 
     const handleDownload = (bill) => {
-        toast.success(`Bill #B-${bill.id} download started (UI demo)`, { icon: '📄' });
+        const columns = ['Bill ID', 'Date', 'Doctor', 'Specialization', 'Amount', 'Status'];
+        const data = [[
+            `B-${bill.id}`,
+            formatDate(bill.created_at),
+            bill.appointment?.doctor?.user?.name || 'N/A',
+            bill.appointment?.doctor?.specialization || 'N/A',
+            formatCurrency(bill.amount),
+            bill.status
+        ]];
+        exportTableToPDF(`Receipt: Bill #B-${bill.id}`, columns, data, `Receipt_B${bill.id}`);
     };
 
     if (loading) {
@@ -69,8 +79,8 @@ export default function PatientBills() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.05 }}
                             className={`flex items-center gap-4 p-4 rounded-2xl border transition-all hover:shadow-lg ${bill.status === 'Paid'
-                                    ? 'bg-emerald-500/5 border-emerald-500/20 hover:border-emerald-500/40'
-                                    : 'bg-yellow-500/5 border-yellow-500/20 hover:border-yellow-500/40'
+                                ? 'bg-emerald-500/5 border-emerald-500/20 hover:border-emerald-500/40'
+                                : 'bg-yellow-500/5 border-yellow-500/20 hover:border-yellow-500/40'
                                 }`}
                         >
                             {/* Icon */}

@@ -48,6 +48,8 @@ export const users = [
     { id: 29, name: 'Ryan Moore', email: 'ryan@example.com', password: 'patient123', role: 'patient', created_at: '2024-02-18T10:00:00Z' },
     { id: 30, name: 'Sophia Young', email: 'sophia.y@example.com', password: 'patient123', role: 'patient', created_at: '2024-02-19T10:00:00Z' },
     { id: 31, name: 'Tyler Hall', email: 'tyler@example.com', password: 'patient123', role: 'patient', created_at: '2024-02-20T10:00:00Z' },
+    // Pharmacist
+    { id: 32, name: 'John Doe', email: 'pharmacy@medicare.pro', password: 'pharmacy123', role: 'pharmacy', created_at: '2024-03-01T10:00:00Z' },
 ];
 
 // 3. DOCTORS (10 doctors)
@@ -142,7 +144,17 @@ export const prescriptions = [
     { id: 10, appointment_id: 2, diagnosis: 'Follow-up: Migraine Management', note: 'Prophylactic Topiramate 25mg daily. Continue diary. Lifestyle modification counseling. Next review in 6 weeks.' },
 ];
 
-// 7. BILLS (10 bills)
+// 7. INVENTORY / STOCKS (6 items initially)
+export const inventory = [
+    { id: 'MED-101', name: 'Paracetamol 500mg', category: 'Analgesics', stock: 1200, unit: 'Tablets', status: 'In Stock' },
+    { id: 'MED-102', name: 'Amoxicillin 500mg', category: 'Antibiotics', stock: 45, unit: 'Capsules', status: 'Low Stock' },
+    { id: 'MED-103', name: 'Ibuprofen 400mg', category: 'NSAIDs', stock: 850, unit: 'Tablets', status: 'In Stock' },
+    { id: 'MED-104', name: 'Lisinopril 10mg', category: 'Antihypertensives', stock: 0, unit: 'Tablets', status: 'Out of Stock' },
+    { id: 'MED-105', name: 'Metformin 500mg', category: 'Antidiabetics', stock: 320, unit: 'Tablets', status: 'In Stock' },
+    { id: 'MED-106', name: 'Albuterol Inhaler', category: 'Bronchodilators', stock: 12, unit: 'Inhalers', status: 'Low Stock' },
+];
+
+// 8. BILLS (10 bills)
 export const bills = [
     { id: 1, appointment_id: 1, amount: 250, status: 'Paid', created_at: '2025-02-10T10:00:00Z' },
     { id: 2, appointment_id: 2, amount: 280, status: 'Paid', created_at: '2025-02-11T11:00:00Z' },
