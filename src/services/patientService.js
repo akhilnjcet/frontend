@@ -10,9 +10,17 @@ const enrichPatient = (patient) => {
     return { ...patient, user };
 };
 
+const API_URL = 'http://localhost:5000/api';
+
 export const getAllPatients = async () => {
-    await delay();
-    return patients.map(enrichPatient);
+    const res = await fetch(`${API_URL}/patients`);
+    if (!res.ok) throw new Error('Failed to fetch patients');
+    const rawData = await res.json();
+
+    return rawData.map(patient => ({
+        ...patient,
+        user: { name: patient.name, email: patient.email }
+    }));
 };
 
 export const getPatientById = async (id) => {
