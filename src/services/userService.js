@@ -2,7 +2,7 @@
 // USER SERVICE - Connecting to local Backend 
 // ═══════════════════════════════════════════════════════
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://mongodbbackend-alpha.vercel.app/api';
 
 // POST /api/auth/login
 export const loginUser = async (email, password) => {

@@ -21,7 +21,7 @@ const enrichAppointment = (appt) => {
     };
 };
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://mongodbbackend-alpha.vercel.app/api';
 
 // GET /api/appointments
 export const getAllAppointments = async () => {

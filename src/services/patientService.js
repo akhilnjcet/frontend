@@ -10,7 +10,7 @@ const enrichPatient = (patient) => {
     return { ...patient, user };
 };
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://mongodbbackend-alpha.vercel.app/api';
 
 export const getAllPatients = async () => {
     const res = await fetch(`${API_URL}/patients`);
