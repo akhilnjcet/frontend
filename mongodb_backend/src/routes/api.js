@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-env node */
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/authMiddleware');

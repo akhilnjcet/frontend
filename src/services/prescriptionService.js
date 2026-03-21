@@ -6,12 +6,12 @@ const getHeaders = () => {
     const token = useAuthStore.getState().token;
     return {
         'Content-Type': 'application/json',
-        'Authorization': \`Bearer \${token}\`
+        'Authorization': `Bearer ${token}`
     };
 };
 
 export const createPrescription = async (data) => {
-    const res = await fetch(\`\${API_URL}/prescriptions\`, {
+    const res = await fetch(`${API_URL}/prescriptions`, {
         method: 'POST',
         headers: getHeaders(),
         body: JSON.stringify(data)
@@ -21,7 +21,7 @@ export const createPrescription = async (data) => {
 };
 
 export const sendPrescriptionToPharmacy = async (id) => {
-    const res = await fetch(\`\${API_URL}/prescriptions/send/\${id}\`, {
+    const res = await fetch(`${API_URL}/prescriptions/send/${id}`, {
         method: 'PUT',
         headers: getHeaders()
     });
@@ -30,7 +30,7 @@ export const sendPrescriptionToPharmacy = async (id) => {
 };
 
 export const getPharmacyPrescriptions = async () => {
-    const res = await fetch(\`\${API_URL}/prescriptions/pharmacy\`, {
+    const res = await fetch(`${API_URL}/prescriptions/pharmacy`, {
         headers: getHeaders()
     });
     if (!res.ok) throw new Error('Failed to fetch pharmacy prescriptions');
@@ -38,7 +38,7 @@ export const getPharmacyPrescriptions = async () => {
 };
 
 export const dispensePrescription = async (id) => {
-    const res = await fetch(\`\${API_URL}/prescriptions/dispense/\${id}\`, {
+    const res = await fetch(`${API_URL}/prescriptions/dispense/${id}`, {
         method: 'PUT',
         headers: getHeaders()
     });
@@ -47,7 +47,7 @@ export const dispensePrescription = async (id) => {
 };
 
 export const getMyPrescriptions = async () => {
-    const res = await fetch(\`\${API_URL}/prescriptions/my\`, {
+    const res = await fetch(`${API_URL}/prescriptions/my`, {
         headers: getHeaders()
     });
     if (!res.ok) throw new Error('Failed to fetch my prescriptions');
@@ -56,7 +56,7 @@ export const getMyPrescriptions = async () => {
 
 // Admin endpoints
 export const getAdminStats = async () => {
-    const res = await fetch(\`\${API_URL}/admin/stats\`, {
+    const res = await fetch(`${API_URL}/admin/stats`, {
         headers: getHeaders()
     });
     if (!res.ok) throw new Error('Failed to fetch stats');
@@ -64,7 +64,7 @@ export const getAdminStats = async () => {
 };
 
 export const getAdminUsers = async () => {
-    const res = await fetch(\`\${API_URL}/admin/users\`, {
+    const res = await fetch(`${API_URL}/admin/users`, {
         headers: getHeaders()
     });
     if (!res.ok) throw new Error('Failed to fetch users');
@@ -72,7 +72,7 @@ export const getAdminUsers = async () => {
 };
 
 export const deleteAdminUser = async (id) => {
-    const res = await fetch(\`\${API_URL}/admin/user/\${id}\`, {
+    const res = await fetch(`${API_URL}/admin/user/${id}`, {
         method: 'DELETE',
         headers: getHeaders()
     });
@@ -81,7 +81,7 @@ export const deleteAdminUser = async (id) => {
 };
 
 export const updateAdminUserStatus = async (id, status) => {
-    const res = await fetch(\`\${API_URL}/admin/user/\${id}/block\`, {
+    const res = await fetch(`${API_URL}/admin/user/${id}/block`, {
         method: 'PUT',
         headers: getHeaders(),
         body: JSON.stringify({ status })
