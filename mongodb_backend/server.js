@@ -51,9 +51,12 @@ async function seedAdmin() {
                 name: 'Admin User',
                 email: 'admin@medicare.pro',
                 password: hashedPassword,
-                role: 'ADMIN'
+                role: 'ADMIN',
+                status: 'active'
             });
             console.log("✅ Default Admin Created: admin@medicare.pro / admin123");
+        } else if (admin.status !== 'active') {
+            await User.findByIdAndUpdate(admin._id, { status: 'active' });
         }
     } catch (err) {
         console.error("Error seeding admin:", err);

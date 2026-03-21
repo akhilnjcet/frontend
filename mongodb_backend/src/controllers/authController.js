@@ -54,7 +54,10 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ error: 'Invalid email or password' });
 
-        if (user.role !== role && user.role !== 'admin' && user.role !== 'ADMIN') {
+        const dbRole = user.role.toUpperCase();
+        const inputRole = role.toUpperCase();
+
+        if (dbRole !== inputRole && dbRole !== 'ADMIN') {
             return res.status(403).json({ error: 'Access denied: Profile does not match selected role.' });
         }
 
