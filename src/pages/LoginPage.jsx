@@ -2,6 +2,7 @@
 // LOGIN PAGE — Enterprise Medical, theme-aware
 // ═══════════════════════════════════════════════════════
 import { useState } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -24,7 +25,7 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const { register, handleSubmit, setValue, formState: { errors } } = useForm();
 
-    if (isAuthenticated) return <Navigate to={`/${user.role}`} replace />;
+    if (isAuthenticated) return <Navigate to={`/${user.role.toLowerCase()}`} replace />;
 
     const onSubmit = async (data) => {
         setLoading(true);
@@ -32,7 +33,7 @@ export default function LoginPage() {
             const res = await loginUser(data.email, data.password, data.role);
             login(res.user, res.token);
             toast.success(`Welcome back, ${res.user.name.split(' ')[0]}!`);
-            navigate(`/${res.user.role}`, { replace: true });
+            navigate(`/${res.user.role.toLowerCase()}`, { replace: true });
         } catch (err) {
             toast.error(err.message || 'Invalid credentials');
         } finally {

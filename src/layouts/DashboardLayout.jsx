@@ -3,6 +3,7 @@
 // ═══════════════════════════════════════════════════════
 import { useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
+// eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion';
 import Sidebar from '../components/Sidebar.jsx';
 import Navbar from '../components/Navbar.jsx';
@@ -14,7 +15,7 @@ export default function DashboardLayout({ role }) {
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
     if (!isAuthenticated) return <Navigate to="/login" replace />;
-    if (role && user?.role !== role) return <Navigate to={`/${user?.role}`} replace />;
+    if (role && user?.role?.toLowerCase() !== role.toLowerCase()) return <Navigate to={`/${user?.role?.toLowerCase()}`} replace />;
 
     return (
         <div data-theme={theme} className="app-shell">

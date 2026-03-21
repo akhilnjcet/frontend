@@ -1,8 +1,8 @@
 // ═══════════════════════════════════════════════════════
 // SIDEBAR — Enterprise, theme-aware, fully accessible
 // ═══════════════════════════════════════════════════════
-import { useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard, Users, UserRound, Building2, Calendar,
@@ -57,8 +57,8 @@ export default function Sidebar({ mobile = false, onCloseMobile }) {
     const { sidebarCollapsed, toggleSidebar } = useUIStore();
     const location = useLocation();
 
-    const nav = NAV[user?.role] || [];
-    const role = ROLE_META[user?.role] || ROLE_META.admin;
+    const nav = NAV[user?.role?.toLowerCase()] || [];
+    const role = ROLE_META[user?.role?.toLowerCase()] || ROLE_META.admin;
     const collapsed = mobile ? false : sidebarCollapsed;
     const w = collapsed ? COLLAPSED_W : EXPANDED_W;
 
