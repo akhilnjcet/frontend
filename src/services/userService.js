@@ -5,13 +5,13 @@
 const API_URL = 'https://mongodbbackend-alpha.vercel.app/api';
 
 // POST /api/auth/login
-export const loginUser = async (email, password) => {
+export const loginUser = async (email, password, role) => {
     const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, role })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Invalid credentials');
