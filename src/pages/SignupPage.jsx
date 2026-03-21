@@ -9,8 +9,9 @@ import { createUser } from '../services/userService.js';
 import FormInput from '../components/FormInput.jsx';
 
 const ROLES = [
-    { id: 'patient', label: 'Patient', icon: User, color: '#1FA79A', bg: 'rgba(31,167,154,.08)', border: 'rgba(31,167,154,.3)' },
-    { id: 'doctor', label: 'Doctor', icon: Stethoscope, color: '#1E5AA8', bg: 'rgba(30,90,168,.08)', border: 'rgba(30,90,168,.3)' },
+    { id: 'PATIENT', label: 'Patient', icon: User, color: '#1FA79A', bg: 'rgba(31,167,154,.08)', border: 'rgba(31,167,154,.3)' },
+    { id: 'DOCTOR', label: 'Doctor', icon: Stethoscope, color: '#1E5AA8', bg: 'rgba(30,90,168,.08)', border: 'rgba(30,90,168,.3)' },
+    { id: 'PHARMACY', label: 'Pharmacy', icon: HeartPulse, color: '#F4A300', bg: 'rgba(244,163,0,.08)', border: 'rgba(244,163,0,.3)' },
 ];
 
 export default function SignupPage() {
@@ -159,7 +160,7 @@ export default function SignupPage() {
                                 })}
                             />
 
-                            {selectedRole === 'doctor' && (
+                            {selectedRole === 'DOCTOR' && (
                                 <FormInput
                                     label="Specialization"
                                     type="text"

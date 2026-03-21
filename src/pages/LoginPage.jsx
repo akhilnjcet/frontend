@@ -29,7 +29,7 @@ export default function LoginPage() {
     const onSubmit = async (data) => {
         setLoading(true);
         try {
-            const res = await loginUser(data.email, data.password);
+            const res = await loginUser(data.email, data.password, data.role);
             login(res.user, res.token);
             toast.success(`Welcome back, ${res.user.name.split(' ')[0]}!`);
             navigate(`/${res.user.role}`, { replace: true });
@@ -43,6 +43,7 @@ export default function LoginPage() {
     const fillLogin = (ql) => {
         setValue('email', ql.email);
         setValue('password', ql.password);
+        setValue('role', ql.role.toUpperCase());
     };
 
     return (
@@ -137,6 +138,32 @@ export default function LoginPage() {
                                 autoComplete="current-password"
                                 {...register('password', { required: 'Password is required' })}
                             />
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                            <label style={{
+                                fontSize: 11.5, fontWeight: 600, textTransform: 'uppercase',
+                                letterSpacing: '.05em', color: 'var(--text-2)',
+                            }}>
+                                Role <span style={{ color: 'var(--color-error)' }} aria-hidden="true">*</span>
+                            </label>
+                            <select
+                                {...register('role', { required: 'Role is required' })}
+                                style={{
+                                    width: '100%', height: 44, padding: '0 14px',
+                                    borderRadius: 10, border: '1px solid var(--border)',
+                                    background: 'var(--bg-app)', color: 'var(--text-1)',
+                                    fontSize: 14, fontFamily: 'inherit',
+                                    outline: 'none', transition: 'border-color .15s'
+                                }}
+                            >
+                                <option value="">Select Role...</option>
+                                <option value="ADMIN">Admin</option>
+                                <option value="DOCTOR">Doctor</option>
+                                <option value="PATIENT">Patient</option>
+                                <option value="PHARMACY">Pharmacy</option>
+                            </select>
+                            {errors.role && <span style={{ fontSize: 11, color: 'var(--color-error)' }}>{errors.role.message}</span>}
                         </div>
 
                         <button
