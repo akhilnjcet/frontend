@@ -65,7 +65,11 @@ export default function BookAppointment() {
         setSubmitting(true);
         try {
             const patient = await getPatientByUserId(user.id);
-            const dateStr = selectedDate.toISOString().split('T')[0];
+            // Use local date string (YYYY-MM-DD) to avoid UTC day-flip issues
+            const dateStr = selectedDate.getFullYear() + '-' + 
+                           String(selectedDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                           String(selectedDate.getDate()).padStart(2, '0');
+            
             await createAppointment({
                 patient_id: patient.id,
                 doctor_id: selectedDoctor.id,

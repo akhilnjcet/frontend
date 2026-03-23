@@ -24,14 +24,20 @@ export default function PatientAppointments() {
     const [expanded, setExpanded] = useState(null);
 
     useEffect(() => {
+        if (!user?.id) return;
         const load = async () => {
-            const patient = await getPatientByUserId(user.id);
-            const appts = await getAppointmentsByPatient(patient.id);
-            setAppointments(appts.sort((a, b) => new Date(b.appointment_date) - new Date(a.appointment_date)));
-            setLoading(false);
+            try {
+                const patient = await getPatientByUserId(user.id);
+                const appts = await getAppointmentsByPatient(patient.id);
+                setAppointments(appts.sort((a, b) => new Date(b.appointment_date) - new Date(a.appointment_date)));
+            } catch (err) {
+                console.error("Failed to load appointments:", err);
+            } finally {
+                setLoading(false);
+            }
         };
         load();
-    }, []);
+    }, [user?.id]);
 
     const filtered = filter === 'All' ? appointments : appointments.filter(a => a.status === filter);
 
