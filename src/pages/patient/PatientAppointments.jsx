@@ -2,6 +2,7 @@
 // PATIENT - MY APPOINTMENTS PAGE
 // ═══════════════════════════════════════════════════════
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Calendar, Clock, User, FileText, ChevronDown, Download } from 'lucide-react';
 import PageWrapper from '../../components/PageWrapper.jsx';
 import AnimatedCard from '../../components/AnimatedCard.jsx';

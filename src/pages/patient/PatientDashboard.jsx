@@ -2,6 +2,7 @@
 // PATIENT DASHBOARD PAGE — theme-aware
 // ═══════════════════════════════════════════════════════
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Calendar, FileText, CreditCard, ArrowRight, Check, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageWrapper from '../../components/PageWrapper.jsx';
