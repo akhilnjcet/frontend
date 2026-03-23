@@ -2,7 +2,7 @@
 // PATIENT - BOOK APPOINTMENT PAGE
 // ═══════════════════════════════════════════════════════
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { Search, Calendar, Check, ChevronRight, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
