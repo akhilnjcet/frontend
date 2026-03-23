@@ -60,3 +60,29 @@ export const getPatientByUserId = async (userId) => {
     if (!patient) throw new Error('Patient record not found');
     return patient;
 };
+
+export const createPatient = async (data) => {
+    await delay();
+    const newPatient = {
+        id: Math.max(...mockPatients.map(p => p.id)) + 1,
+        ...data
+    };
+    mockPatients.push(newPatient);
+    return enrichPatient(newPatient);
+};
+
+export const updatePatient = async (id, data) => {
+    await delay();
+    const idx = mockPatients.findIndex(p => p.id === Number(id));
+    if (idx === -1) throw new Error('Patient not found');
+    mockPatients[idx] = { ...mockPatients[idx], ...data };
+    return enrichPatient(mockPatients[idx]);
+};
+
+export const deletePatient = async (id) => {
+    await delay();
+    const idx = mockPatients.findIndex(p => p.id === Number(id));
+    if (idx === -1) throw new Error('Patient not found');
+    mockPatients.splice(idx, 1);
+    return { success: true };
+};
