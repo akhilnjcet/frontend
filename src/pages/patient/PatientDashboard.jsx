@@ -89,7 +89,7 @@ export default function PatientDashboard() {
                     const Icon = q.icon;
                     return (
                         <Link to={q.to} key={q.label} style={{ textDecoration: 'none' }}>
-                            <motion.div
+                            <Motion.div
                                 whileHover={{ y: -3, scale: 1.01 }}
                                 style={{
                                     padding: 20, borderRadius: 12,
@@ -114,7 +114,7 @@ export default function PatientDashboard() {
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 12, color: q.color, fontSize: 12, fontWeight: 600 }}>
                                     Go <ArrowRight size={13} />
                                 </div>
-                            </motion.div>
+                            </Motion.div>
                         </Link>
                     );
                 })}
