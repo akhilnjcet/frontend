@@ -1,25 +1,10 @@
 // ═══════════════════════════════════════════════════════
 // APPOINTMENT SERVICE - Mock REST API
 // ═══════════════════════════════════════════════════════
-import { appointments, patients, doctors, users, prescriptions, bills } from '../mock/database.js';
+import { appointments } from '../mock/database.js';
 
 const delay = (ms = 400) => new Promise(res => setTimeout(res, ms));
 
-const enrichAppointment = (appt) => {
-    const patient = patients.find(p => p.id === appt.patient_id);
-    const doctor = doctors.find(d => d.id === appt.doctor_id);
-    const patientUser = patient ? users.find(u => u.id === patient.user_id) : null;
-    const doctorUser = doctor ? users.find(u => u.id === doctor.user_id) : null;
-    const prescription = prescriptions.find(p => p.appointment_id === appt.id);
-    const bill = bills.find(b => b.appointment_id === appt.id);
-    return {
-        ...appt,
-        patient: patient ? { ...patient, user: patientUser } : null,
-        doctor: doctor ? { ...doctor, user: doctorUser } : null,
-        prescription: prescription || null,
-        bill: bill || null,
-    };
-};
 
 const API_URL = 'https://mongodbbackend-alpha.vercel.app/api';
 
@@ -39,28 +24,16 @@ export const getAllAppointments = async () => {
     }));
 };
 
-// GET /api/appointments/:id
-export const getAppointmentById = async (id) => {
-    await delay(200);
-    const appt = appointments.find(a => a.id === Number(id));
-    if (!appt) throw new Error('Appointment not found');
-    return enrichAppointment(appt);
-};
-
 // GET /api/appointments/patient/:patientId
 export const getAppointmentsByPatient = async (patientId) => {
-    await delay();
-    return appointments
-        .filter(a => a.patient_id === Number(patientId))
-        .map(enrichAppointment);
+    const all = await getAllAppointments();
+    return all.filter(a => Number(a.patient_id) === Number(patientId));
 };
 
 // GET /api/appointments/doctor/:doctorId
 export const getAppointmentsByDoctor = async (doctorId) => {
-    await delay();
-    return appointments
-        .filter(a => a.doctor_id === Number(doctorId))
-        .map(enrichAppointment);
+    const all = await getAllAppointments();
+    return all.filter(a => Number(a.doctor_id) === Number(doctorId));
 };
 
 // POST /api/appointments

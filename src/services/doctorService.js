@@ -27,10 +27,10 @@ export const getDoctorById = async (id) => {
 
 // GET /api/doctors/user/:userId
 export const getDoctorByUserId = async (userId) => {
-    await delay(200);
-    const doctor = doctors.find(d => d.user_id === Number(userId));
-    if (!doctor) throw new Error('Doctor not found');
-    return enrichDoctor(doctor);
+    const all = await getAllDoctors();
+    const doctor = all.find(d => Number(d.user_id) === Number(userId));
+    if (!doctor) throw new Error('Doctor record not found');
+    return doctor;
 };
 
 // GET /api/doctors/department/:deptId

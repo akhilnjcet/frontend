@@ -15,12 +15,6 @@ import { useAuthStore } from '../../store/index.js';
 import { formatDate, formatTime, getInitials, getAvatarGradient } from '../../utils/index.js';
 import { exportTableToPDF } from '../../utils/pdfExport.js';
 
-const actionBtn = (color, hoverBg) => ({
-    padding: '6px', borderRadius: 7, border: '1px solid transparent',
-    background: 'transparent', cursor: 'pointer', display: 'flex',
-    transition: 'all .15s', color,
-    hoverBg,
-});
 
 export default function DoctorAppointments() {
     const { user } = useAuthStore();
@@ -30,20 +24,30 @@ export default function DoctorAppointments() {
     const [search, setSearch] = useState('');
     const [filter, setFilter] = useState('All');
 
-    const load = async () => {
-        setLoading(true);
-        const doc = await getDoctorByUserId(user.id);
-        const appts = await getAppointmentsByDoctor(doc.id);
-        setAppointments(appts);
-        setLoading(false);
-    };
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    useEffect(() => { load(); }, []);
+    useEffect(() => {
+        const loadDoc = async () => {
+            if (!user?.id) return;
+            setLoading(true);
+            try {
+                const doc = await getDoctorByUserId(user.id);
+                const appts = await getAppointmentsByDoctor(doc.id);
+                setAppointments(appts);
+            } catch (err) {
+                console.error("Error loading doctor appointments:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadDoc();
+    }, [user?.id]);
 
     const handleStatus = async (id, status) => {
         await updateAppointmentStatus(id, status);
         toast.success(`Appointment marked as ${status}`);
-        load();
+        // Simple refresh logic
+        const doc = await getDoctorByUserId(user.id);
+        const appts = await getAppointmentsByDoctor(doc.id);
+        setAppointments(appts);
     };
 
     const STATUS_TABS = ['All', 'Scheduled', 'Completed', 'Cancelled'];

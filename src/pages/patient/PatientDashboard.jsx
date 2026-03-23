@@ -39,6 +39,7 @@ export default function PatientDashboard() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (!user?.id) return;
         const load = async () => {
             try {
                 const p = await getPatientByUserId(user.id);
@@ -48,10 +49,12 @@ export default function PatientDashboard() {
                 ]);
                 setAppointments(appts);
                 setBills(b);
+            } catch (err) {
+                console.error("Dashboard load error:", err);
             } finally { setLoading(false); }
         };
         load();
-    }, []);
+    }, [user?.id]);
 
     const upcoming = appointments.filter(a => a.status === 'Scheduled');
     const completed = appointments.filter(a => a.status === 'Completed');

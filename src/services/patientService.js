@@ -31,10 +31,10 @@ export const getPatientById = async (id) => {
 };
 
 export const getPatientByUserId = async (userId) => {
-    await delay(200);
-    const patient = patients.find(p => p.user_id === Number(userId));
-    if (!patient) throw new Error('Patient not found');
-    return enrichPatient(patient);
+    const all = await getAllPatients();
+    const patient = all.find(p => Number(p.user_id) === Number(userId));
+    if (!patient) throw new Error('Patient record not found');
+    return patient;
 };
 
 export const createPatient = async (data) => {
