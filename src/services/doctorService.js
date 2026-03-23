@@ -5,6 +5,17 @@ import { doctors, users, departments } from '../mock/database.js';
 
 const delay = (ms = 400) => new Promise(res => setTimeout(res, ms));
 
+const API_URL = 'https://mongodbbackend-alpha.vercel.app/api';
+
+const getAuthHeaders = () => {
+    try {
+        const stored = sessionStorage.getItem('medicare-auth');
+        if (!stored) return {};
+        const { state } = JSON.parse(stored);
+        return state.token ? { 'Authorization': `Bearer ${state.token}` } : {};
+    } catch { return {}; }
+};
+
 const enrichDoctor = (doctor) => {
     const user = users.find(u => u.id === doctor.user_id);
     const dept = departments.find(d => d.id === doctor.department_id);
@@ -13,8 +24,15 @@ const enrichDoctor = (doctor) => {
 
 // GET /api/doctors
 export const getAllDoctors = async () => {
-    await delay();
-    return doctors.map(enrichDoctor);
+    const res = await fetch(`${API_URL}/doctors`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error('Failed to fetch doctors');
+    const rawData = await res.json();
+    return rawData.map(doc => ({
+        ...doc,
+        user: doc.user_id && typeof doc.user_id === 'object' ? doc.user_id : { name: doc.name || 'Doctor', email: doc.email }
+    }));
 };
 
 // GET /api/doctors/:id
@@ -28,15 +46,18 @@ export const getDoctorById = async (id) => {
 // GET /api/doctors/user/:userId
 export const getDoctorByUserId = async (userId) => {
     const all = await getAllDoctors();
-    const doctor = all.find(d => Number(d.user_id) === Number(userId));
+    const doctor = all.find(d => {
+        const uid = d.user_id && typeof d.user_id === 'object' ? d.user_id.id : d.user_id;
+        return Number(uid) === Number(userId);
+    });
     if (!doctor) throw new Error('Doctor record not found');
     return doctor;
 };
 
 // GET /api/doctors/department/:deptId
 export const getDoctorsByDepartment = async (deptId) => {
-    await delay();
-    return doctors.filter(d => d.department_id === Number(deptId)).map(enrichDoctor);
+    const all = await getAllDoctors();
+    return all.filter(d => Number(d.department_id) === Number(deptId));
 };
 
 // POST /api/doctors

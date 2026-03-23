@@ -8,9 +8,20 @@ const delay = (ms = 400) => new Promise(res => setTimeout(res, ms));
 
 const API_URL = 'https://mongodbbackend-alpha.vercel.app/api';
 
+const getAuthHeaders = () => {
+    try {
+        const stored = sessionStorage.getItem('medicare-auth');
+        if (!stored) return {};
+        const { state } = JSON.parse(stored);
+        return state.token ? { 'Authorization': `Bearer ${state.token}` } : {};
+    } catch { return {}; }
+};
+
 // GET /api/appointments
 export const getAllAppointments = async () => {
-    const res = await fetch(`${API_URL}/appointments`);
+    const res = await fetch(`${API_URL}/appointments`, {
+        headers: getAuthHeaders()
+    });
     if (!res.ok) throw new Error('Failed to fetch appointments');
     const rawData = await res.json();
 
@@ -41,6 +52,7 @@ export const createAppointment = async (data) => {
     const res = await fetch(`${API_URL}/appointments`, {
         method: 'POST',
         headers: {
+            ...getAuthHeaders(),
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
@@ -55,6 +67,7 @@ export const updateAppointmentStatus = async (id, status) => {
     const res = await fetch(`${API_URL}/appointments/${id}/status`, {
         method: 'PUT',
         headers: {
+            ...getAuthHeaders(),
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ status })

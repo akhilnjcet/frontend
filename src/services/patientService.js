@@ -12,8 +12,19 @@ const enrichPatient = (patient) => {
 
 const API_URL = 'https://mongodbbackend-alpha.vercel.app/api';
 
+const getAuthHeaders = () => {
+    try {
+        const stored = sessionStorage.getItem('medicare-auth');
+        if (!stored) return {};
+        const { state } = JSON.parse(stored);
+        return state.token ? { 'Authorization': `Bearer ${state.token}` } : {};
+    } catch { return {}; }
+};
+
 export const getAllPatients = async () => {
-    const res = await fetch(`${API_URL}/patients`);
+    const res = await fetch(`${API_URL}/patients`, {
+        headers: getAuthHeaders()
+    });
     if (!res.ok) throw new Error('Failed to fetch patients');
     const rawData = await res.json();
 
