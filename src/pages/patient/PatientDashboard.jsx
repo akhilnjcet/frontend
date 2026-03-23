@@ -2,7 +2,7 @@
 // PATIENT DASHBOARD PAGE — theme-aware
 // ═══════════════════════════════════════════════════════
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { Calendar, FileText, CreditCard, ArrowRight, Check, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageWrapper from '../../components/PageWrapper.jsx';
@@ -151,7 +151,7 @@ export default function PatientDashboard() {
                     ) : (
                         <div>
                             {upcoming.slice(0, 3).map((appt, idx) => (
-                                <motion.div
+                                <Motion.div
                                     key={appt.id}
                                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: idx * 0.05 }}
                                     style={{
@@ -182,7 +182,7 @@ export default function PatientDashboard() {
                                         </p>
                                     </div>
                                     <StatusBadge status={appt.status} size="sm" />
-                                </motion.div>
+                                </Motion.div>
                             ))}
                         </div>
                     )}
